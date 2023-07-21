@@ -1,0 +1,4 @@
+venv
+.idea
+my_token.py
+.env
