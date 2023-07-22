@@ -5,7 +5,7 @@ from telegram.ext import CommandHandler, CallbackContext, ApplicationBuilder
 from dotenv import load_dotenv
 import os
 import re
-
+from functools import wraps
 
 
 class Counter:
@@ -13,6 +13,8 @@ class Counter:
         self.summ = summ
         self.operation = operation
         self.score = None
+
+
 
     def add(self):
         with open("base.txt", "a+") as open_base:
@@ -43,22 +45,47 @@ class Counter:
         return "✅"
 
 
-    def delete(self):
-        with open("base.txt", "r+") as open_base:
-            open_base_work = open_base.read()
-            time = datetime.now()
-            format_time = time.strftime("%Y-%m-%d %H:%M")
-            data_time = str(f"{format_time} {self.operation} {self.summ}")
-            open_base.seek(0)
-            for i in open_base_work.strip(",\n"):
-                print(self.summ)
-                print(i)
 
-                if i != self.summ:
-                    open_base.write(str(n))
-        #     open_base.write(str(data_time) + ",\n")
-        # with open("score.txt", "r+") as open_score:
-        #     sconre = int(open_score.read()) + self.summ
-        #     open_score.seek(0)
-        #     open_score.write(str(sconre))
-        # return "✅"
+
+    def delete_add(self):
+        with open("base.txt", "r+") as open_base:
+            open_base_work = open_base.readlines()
+            open_base.seek(0)
+
+            for i in open_base_work:
+                if i:
+                    if i.strip(",\n") != self.summ:
+                        open_base.write(i)
+
+                else:
+                    break
+
+            open_base.truncate()
+            with open("score.txt", "r+") as open_score:
+                sconre = int(open_score.read()) - int(self.summ.split(" ")[-1])
+                open_score.seek(0)
+                open_score.write(str(sconre))
+
+        return "✅"
+
+    def delete_take(self):
+        with open("base.txt", "r+") as open_base:
+            open_base_work = open_base.readlines()
+            open_base.seek(0)
+
+            for i in open_base_work:
+                if i:
+                    if i.strip(",\n") != self.summ:
+                        open_base.write(i)
+
+                else:
+                    break
+
+            open_base.truncate()
+            with open("score.txt", "r+") as open_score:
+                sconre = int(open_score.read()) + int(self.summ.split(" ")[-1])
+                open_score.seek(0)
+                open_score.write(str(sconre))
+
+        return "✅"
+
