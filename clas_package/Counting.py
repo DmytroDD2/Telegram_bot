@@ -1,11 +1,4 @@
-import logging
-from telegram import Update
-from datetime import datetime, timedelta
-from telegram.ext import CommandHandler, CallbackContext, ApplicationBuilder
-from dotenv import load_dotenv
-import os
-import re
-from functools import wraps
+from datetime import datetime
 
 
 class Counter:
@@ -14,38 +7,56 @@ class Counter:
         self.operation = operation
         self.score = None
 
+        self.cat_deposit = "deposit"
+        self.cat_salary = "salary"
+        self.cat_withdraw = "withdraw"
+        self.cat_write_transfer = "write_transfer"
 
+    def ident(self):
+        match self.summ[0]:
+            case self.cat_deposit:
+                return self.adds()
 
-    def add(self):
+            case self.cat_salary:
+                return self.adds()
+
+            case self.cat_withdraw:
+                return self.take()
+
+            case self.cat_write_transfer:
+                return self.take()
+
+            case _:
+                return "Unknown category"
+    def adds(self):
         with open("base.txt", "a+") as open_base:
             time = datetime.now()
             format_time = time.strftime("%Y-%m-%d %H:%M")
-            data_time = f"{format_time} {self.operation} {self.summ}"
+            data_time = f"{format_time} {self.summ[0]} {self.summ[1]}"
             open_base.write(str(data_time) + ",\n")
         with open("score.txt", "r+") as open_score:
-            sconre = int(open_score.read()) + self.summ
+            sconre = int(open_score.read()) + int(self.summ[1])
             open_score.seek(0)
             open_score.write(str(sconre))
-        return "✅"
+        return "✅ The operation was successfully performed!"
 
     def take(self):
-        with open("base.txt", "a+") as open_base:
-            time = datetime.now()
-            format_time = time.strftime("%Y-%m-%d %H:%M")
-            data_time = f"{format_time} {self.operation} {self.summ}"
-            open_base.write(str(data_time) + ",\n")
         with open("score.txt", "r+") as open_scorr:
             red_scor = int(open_scorr.read())
-            if red_scor < self.summ:
+            if red_scor < int(self.summ[1]):
                 return "❌There are insufficient funds in the account"
             else:
-                score = red_scor - self.summ
+                with open("base.txt", "a+") as open_base:
+                    time = datetime.now()
+                    format_time = time.strftime("%Y-%m-%d %H:%M")
+                    data_time = f"{format_time} {self.summ[0]} {self.summ[1]}"
+                    open_base.write(str(data_time) + ",\n")
+
+                score = red_scor - int(self.summ[1])
                 open_scorr.seek(0)
                 open_scorr.write(str(score))
-        return "✅"
 
-
-
+        return "✅ The operation was successfully performed!"
 
     def delete_add(self):
         with open("base.txt", "r+") as open_base:
@@ -56,9 +67,9 @@ class Counter:
                 if i:
                     if i.strip(",\n") != self.summ:
                         open_base.write(i)
-
                 else:
                     break
+
 
             open_base.truncate()
             with open("score.txt", "r+") as open_score:
@@ -66,7 +77,7 @@ class Counter:
                 open_score.seek(0)
                 open_score.write(str(sconre))
 
-        return "✅"
+        return "✅ Payment deleted"
 
     def delete_take(self):
         with open("base.txt", "r+") as open_base:
@@ -77,7 +88,6 @@ class Counter:
                 if i:
                     if i.strip(",\n") != self.summ:
                         open_base.write(i)
-
                 else:
                     break
 
@@ -87,5 +97,12 @@ class Counter:
                 open_score.seek(0)
                 open_score.write(str(sconre))
 
-        return "✅"
+        return "✅ Payment deleted"
+
+
+
+
+
+
+
 
