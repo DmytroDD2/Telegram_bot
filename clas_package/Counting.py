@@ -50,17 +50,15 @@ class Counter:
 
                 return "❌There are insufficient funds in the account"
             else:
-                if red_scor == int(open_scorr.read()):
+                if red_scor == int(self.summ[1]):
                     open_scorr.seek(0)
                     open_scorr.write('0')
                     open_scorr.truncate()
                 else:
                     score = red_scor - int(self.summ[1])
                     open_scorr.seek(0)
-                    print(score)
-                    open_scorr.seek(0)
                     open_scorr.write(str(score))
-
+                    open_scorr.truncate()
 
                 with open("base.txt", "a+") as open_base:
                     time = datetime.now()

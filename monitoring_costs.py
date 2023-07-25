@@ -144,7 +144,7 @@ async def statistics_day(update: Update, context: CallbackContext):
     await update.message.reply_text(inf.stat_day(), disable_notification=True)
 
 
-key = ("TOKEN_BOT")
+key = ("BOT_TOKEN")
 
 
 def run():
