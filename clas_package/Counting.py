@@ -29,6 +29,7 @@ class Counter:
             case _:
                 return "Unknown category"
     def adds(self):
+        or_number()
         with open("base.txt", "a+") as open_base:
             time = datetime.now()
             format_time = time.strftime("%Y-%m-%d %H:%M")
@@ -43,18 +44,31 @@ class Counter:
     def take(self):
         with open("score.txt", "r+") as open_scorr:
             red_scor = int(open_scorr.read())
+            print(open_scorr.read())
+            open_scorr.seek(0)
             if red_scor < int(self.summ[1]):
+
                 return "❌There are insufficient funds in the account"
             else:
+                if red_scor == int(open_scorr.read()):
+                    open_scorr.seek(0)
+                    open_scorr.write('0')
+                    open_scorr.truncate()
+                else:
+                    score = red_scor - int(self.summ[1])
+                    open_scorr.seek(0)
+                    print(score)
+                    open_scorr.seek(0)
+                    open_scorr.write(str(score))
+
+
                 with open("base.txt", "a+") as open_base:
                     time = datetime.now()
                     format_time = time.strftime("%Y-%m-%d %H:%M")
                     data_time = f"{format_time} {self.summ[0]} {self.summ[1]}"
                     open_base.write(str(data_time) + ",\n")
 
-                score = red_scor - int(self.summ[1])
-                open_scorr.seek(0)
-                open_scorr.write(str(score))
+
 
         return "✅ The operation was successfully performed!"
 
@@ -104,5 +118,12 @@ class Counter:
 
 
 
-
+def or_number() -> None:
+    with open("score.txt", "r+") as open_score:
+        try:
+            int(open_score.readline())
+        except ValueError:
+            open_score.seek(0)
+            open_score.truncate()
+            open_score.write('0')
 
