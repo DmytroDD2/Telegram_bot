@@ -143,8 +143,10 @@ async def statistics_day(update: Update, context: CallbackContext):
     inf = Statistics(upd)
     await update.message.reply_text(inf.stat_day(), disable_notification=True)
 
-
-key = ("6399574800:AAHWNHgGg_Jf5j5EgXs_vcTMDJr7QZ0kW0g")
+import os
+from dotenv import load_dotenv
+load_dotenv()
+key = os.getenv("TELEGRAM_TOKEN")
 
 
 def run():

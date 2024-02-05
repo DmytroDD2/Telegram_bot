@@ -57,6 +57,7 @@ class InformationScore:
 
 class Statistics(InformationScore):
     def stat_all(self, func):
+        print("+"*100)
         deposit = 0
         salary = 0
         withdraw = 0
@@ -93,6 +94,7 @@ class Statistics(InformationScore):
         return self.stat_all(self.year)
 
     def stat_moth(self):
+
         return self.stat_all(self.month)
 
     def stat_week(self):
